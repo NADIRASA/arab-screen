@@ -1,0 +1,28 @@
+// أضف هذا الكود في قسم الـ <script> في صفحة الـ HTML
+// استبدل الروابط أدناه ببيانات مشروعك من لوحة تحكم Supabase
+import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js';
+
+const supabaseUrl = 'رابط_مشروعك_من_Supabase';
+const supabaseKey = 'مفتاح_الـ_API_الخاص_بمشروعك';
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+async function fetchMovies() {
+    const { data, error } = await supabase.from('movies').select('*');
+    if (error) console.error('خطأ في جلب الأفلام:', error);
+    else renderMovies(data);
+}
+
+function renderMovies(movies) {
+    const grid = document.getElementById('movieGrid');
+    grid.innerHTML = movies.map(movie => `
+        <div class="movie-card bg-zinc-900 rounded-xl overflow-hidden cursor-pointer">
+            <img src="${movie.image_url}" class="w-full h-60 object-cover">
+            <div class="p-3">
+                <h3 class="font-bold text-sm truncate">${movie.title}</h3>
+                <p class="text-[10px] text-gray-400">${movie.category}</p>
+            </div>
+        </div>
+    `).join('');
+}
+
+window.onload = fetchMovies;
